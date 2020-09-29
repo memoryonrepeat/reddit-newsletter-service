@@ -1,0 +1,11 @@
+version: '3'
+services:
+  server:
+    build: .
+    ports:
+      - "8081:8081"
+  redis:
+    image: "redis:alpine"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ~/redis-data:/data

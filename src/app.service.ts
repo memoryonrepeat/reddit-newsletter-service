@@ -8,8 +8,7 @@ export class AppService {
   async upsertPreference(preferenceInput: PreferenceInput) {
     const client = await this.redisService.getClient()
     const { email, ...rest } = preferenceInput
-    console.log(email, rest)
-    client.hmset(email, rest, client.print)
+    await client.hmset(email, new Map(Object.entries(rest)))
     return preferenceInput
   }
 }
