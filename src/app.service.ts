@@ -1,40 +1,32 @@
 import { Injectable, OnModuleInit } from '@nestjs/common'
 import { PreferenceInput } from './dtos/preference-input.dto'
-import { RedisService } from 'nestjs-redis'
+import { InjectRedis, Redis } from '@svtslv/nestjs-ioredis'
 import { SchedulerRegistry } from '@nestjs/schedule'
 import { CronJob } from 'cron'
-
 
 @Injectable()
 export class AppService implements OnModuleInit {
   constructor(
-  	private readonly redisService: RedisService,
-    private client,
+    @InjectRedis() private readonly client: Redis,
     private schedulerRegistry: SchedulerRegistry
-  ) {
-  	this.init()
-  }
+  ) {}
 
-  // Workaround to use async constructor
-  async init(){
-  	this.client = await this.redisService.getClient()
-
-  }
-
-  // Lifecycle event
   async onModuleInit() {
-  	const stream = this.client.scanStream()
-    stream.on('data', async (data) => {
-      const res = await this.client.hgetall(data)
-      console.log('--->', data, res)
-      const seconds = 5
-      const job = new CronJob(`${seconds} * * * * *`, () => {
-        console.log(`time (${seconds}) for job news to run!`);
+    const stream = this.client.scanStream()
+    stream.on('data', async (hashes) => {
+      hashes.map(async (hash) => {
+        const res = await this.client.hgetall(hash)
+        console.log('--->', hash, res)
+        const job = new CronJob(`2 * * * * *`, () => {
+          console.log(`job ${hash} runs every 2 seconds`)
+        })
+        this.schedulerRegistry.addCronJob(hash, job)
+        job.start()
       })
-      this.schedulerRegistry.addCronJob('news', job)
-      
     })
-    console.log(`The module has been initialized.`);
+    stream.on('end', () => {
+      console.log('initialized existing crons')
+    })
   }
 
   async upsertPreference(preferenceInput: PreferenceInput) {
