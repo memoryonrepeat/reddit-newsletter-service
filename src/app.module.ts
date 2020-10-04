@@ -1,11 +1,14 @@
-import { Module } from '@nestjs/common'
+import { Module, HttpModule } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { RedisModule } from '@svtslv/nestjs-ioredis'
 import { ScheduleModule } from '@nestjs/schedule'
+import { RedditModule } from './services/reddit/reddit.module'
 
 @Module({
   imports: [
+    HttpModule,
+    RedditModule,
     ScheduleModule.forRoot(),
     RedisModule.forRoot({
       config: {
