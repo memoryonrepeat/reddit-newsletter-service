@@ -2,7 +2,7 @@ Reddit newsletter service with potential Slack integration.
 
 Prerequisite: [Docker compose](https://docs.docker.com/compose/install/)
 
-Preferences are stored in Redis in persistence mode.
+Preferences are stored in Redis in persistence mode for fast and convenient access. The persistence mode guarantees that data is kept on disk after restart, similar to a traditional database.
 
 On startup, existing preferences are loaded and crons are setup accordingly.
 
