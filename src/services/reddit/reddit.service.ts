@@ -2,7 +2,7 @@ import { Injectable, HttpService } from '@nestjs/common'
 
 const POSTS_PER_SUB = 3
 const TIME_UNIT = 'day'
-const BASE_REDDIT_URL = 'https://www.reddit.com/'
+const BASE_REDDIT_URL = 'https://www.reddit.com'
 
 @Injectable()
 export class RedditService {
@@ -11,12 +11,17 @@ export class RedditService {
   async getTopPosts(subs: string[]): Promise<any> {
     return Promise.all(
       subs.map(async (sub) => {
+        if (!sub) {
+          console.log('Warning - One of the sub is empty')
+          return []
+        }
+
         try {
-          const request = `${BASE_REDDIT_URL}r/${sub}/top.json?limit=${POSTS_PER_SUB}&t=${TIME_UNIT}`
+          const request = `${BASE_REDDIT_URL}/r/${sub}/top.json?limit=${POSTS_PER_SUB}&t=${TIME_UNIT}`
           const response = await this.httpService.get(request).toPromise()
           if (response.status !== 200) {
             console.log(
-              'Unhealthy status',
+              'Unhealthy response',
               response.status,
               response.statusText
             )
@@ -30,7 +35,7 @@ export class RedditService {
 
           return topPosts
         } catch (err) {
-          console.log('error while fetching posts', err)
+          console.log('Error while fetching posts', err.response.data)
           return []
         }
       })

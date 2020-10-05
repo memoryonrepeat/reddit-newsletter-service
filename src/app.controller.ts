@@ -25,4 +25,9 @@ export class AppController {
   async upsertPreference(@Body() preferenceInput: PreferenceInput) {
     return this.appService.upsertPreference(preferenceInput)
   }
+
+  @Get(':email')
+  async getPreference(@Param('email') email: string) {
+    return this.appService.getPreference(email)
+  }
 }

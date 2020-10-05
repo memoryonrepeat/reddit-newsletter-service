@@ -3,6 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 
+const PORT = 8081
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
@@ -17,7 +19,9 @@ async function bootstrap() {
 
   SwaggerModule.setup('docs', app, document)
 
-  await app.listen(8081)
+  await app.listen(PORT)
+
+  console.log(`Server started. Try at http://localhost:${PORT}/docs/`)
 }
 
 bootstrap().catch((e) => {

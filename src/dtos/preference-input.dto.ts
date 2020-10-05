@@ -19,9 +19,9 @@ export class PreferenceInput {
   @IsNotEmpty()
   email: string
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   name: string
 
   @ApiProperty({ required: false })
@@ -44,18 +44,18 @@ export class PreferenceInput {
   @IsBoolean()
   active: boolean = true
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ default: 'email', required: false })
   @IsOptional()
   @IsString()
   @IsIn(['email', 'slack'])
   type: string = 'email'
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ default: 8, required: false })
   @IsOptional()
   @IsIn(Array.from(Array(24).keys()))
   hour: number = 8
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ default: 0, required: false })
   @IsOptional()
   @IsIn(Array.from(Array(60).keys()))
   minute: number = 0
