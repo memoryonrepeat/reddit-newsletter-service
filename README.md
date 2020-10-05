@@ -1,5 +1,7 @@
 Reddit newsletter service with potential Slack integration.
 
+Prerequisite: [Docker compose](https://docs.docker.com/compose/install/)
+
 Preferences are stored in Redis in persistence mode.
 
 On startup, existing preferences are loaded and crons are setup accordingly.
